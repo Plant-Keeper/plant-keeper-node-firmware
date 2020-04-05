@@ -32,6 +32,6 @@ Usage for sprinkler
         )
 
         if client.power == True:
-            activate_vale = True
+            activate_valve = True
         else:
-            activate_vale = False
+            activate_valve = False
