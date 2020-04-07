@@ -1,6 +1,3 @@
-from .node_type import NODE_TYPES
-
-
 class BaseValidatePOST:
     required_keys = None
 

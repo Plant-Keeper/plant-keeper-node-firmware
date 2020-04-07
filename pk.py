@@ -2,7 +2,7 @@ try:
     import urequests as requests
 except ImportError:
     import requests
-from .node_type import (
+from node_type import (
     NODE_TYPES,
     ENCLOSURE,
     COOLER,
@@ -11,7 +11,7 @@ from .node_type import (
     SPRINKLER,
     WATER_PUMP
 )
-from .validate_dict import (
+from validate_dict import (
     ValidateEnclosurePOST,
     ValidatedCoolerPOST,
     ValidateHeaterPOST,
@@ -55,6 +55,7 @@ class Client:
                 + self.host
                 + ':'
                 + str(self.port)
+                + '/'
                 + str(self.node_type)
                 + '/'
         )
