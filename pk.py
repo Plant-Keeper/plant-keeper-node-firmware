@@ -46,7 +46,7 @@ class Client:
             'Content-Type': 'application/json'
         }
         self.power = False
-        self.validator = self.__get_post_validator()
+        self.validator = False
 
     @property
     def api(self):
@@ -60,19 +60,19 @@ class Client:
                 + '/'
         )
 
-    def __get_post_validator(self):
+    def get_post_validator(self):
         if self.node_type == ENCLOSURE:
-            return ValidateEnclosurePOST()
+            self.validator = ValidateEnclosurePOST()
         elif self.node_type == COOLER:
-            return ValidatedCoolerPOST()
+            self.validator = ValidatedCoolerPOST()
         elif self.node_type == HEATER:
-            return ValidateHeaterPOST()
+            self.validator = ValidateHeaterPOST()
         elif self.node_type == HUMIDIFIER:
-            return ValidateHumidifierPOST()
+            self.validator = ValidateHumidifierPOST()
         elif self.node_type == SPRINKLER:
-            return ValidateSprinklerPOST()
+            self.validator = ValidateSprinklerPOST()
         elif self.node_type == WATER_PUMP:
-            return ValidateWaterPumpPOST()
+            self.validator = ValidateWaterPumpPOST()
 
     def set_node_type(self, node_type):
         assert isinstance(node_type, str)
@@ -82,19 +82,21 @@ class Client:
                 + ' not in ' + str(NODE_TYPES)
             )
         self.node_type = node_type
+        self.get_post_validator()
 
     def post(self, _dict):
         assert isinstance(_dict, dict)
-        try:
-            self.validator.validate(_dict)
-        except ValueError:
-            print('Post dict not valid')
-        else:
-            r = requests.post(
-                self.api,
-                json=_dict,
-                headers=self.header
-            )
 
-            if r.status_code in [200, 201]:
-                self.power = r.json()['power']
+        if not self.node_type:
+            raise ValueError('Node type not set')
+
+        self.validator.validate(_dict)
+
+        r = requests.post(
+            self.api,
+            json=_dict,
+            headers=self.header
+        )
+
+        if r.status_code in [200, 201]:
+            self.power = r.json()['power']

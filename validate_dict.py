@@ -2,13 +2,18 @@ class BaseValidatePOST:
     required_keys = None
 
     def validate(self, _dict):
+        missing_list = []
         for r in self.required_keys:
             if r not in _dict:
-                raise ValueError(
-                    'Mandatory key=' + r + ' not provided'
-                )
-        else:
-            return True
+                missing_list.append(r)
+        if missing_list:
+            raise ValueError(
+                'Mandatory key='
+                + str(missing_list)
+                + ' not provided'
+            )
+
+        return True
 
 
 class ValidateEnclosurePOST(BaseValidatePOST):
