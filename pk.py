@@ -21,7 +21,7 @@ from validate_dict import (
 )
 
 
-class Client:
+class PlantKeeper:
 
     def __init__(
             self,
