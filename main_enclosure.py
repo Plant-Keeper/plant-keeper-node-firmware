@@ -31,4 +31,6 @@ if __name__ == '__main__':
             pass
         except OSError:
             pass
+        finally:
+            print('[WAR] Can read sensor on PIN 14')
         gc.collect()
