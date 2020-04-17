@@ -1,3 +1,12 @@
+"""
+Validate mandatory keys for request post
+
+Author : Shanmugathas Vigneswaran
+mail : shanmugathas.vigneswaran@outlook.fr
+
+"""
+
+
 class BaseValidatePOST:
     required_keys = None
 
