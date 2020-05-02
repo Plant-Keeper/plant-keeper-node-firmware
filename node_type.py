@@ -3,8 +3,8 @@ Node type definition
 """
 
 ENCLOSURE = 'enclosure'
-SPRINKLER = 'sprinkler-valve'
-WATER_PUMP = 'water-pump'
+SPRINKLER = 'sprinkler'
+WATER = 'water'
 COOLER = 'cooler'
 HEATER = 'heater'
 HUMIDIFIER = 'humidifier'
@@ -12,7 +12,7 @@ HUMIDIFIER = 'humidifier'
 NODE_TYPES = [
     ENCLOSURE,
     SPRINKLER,
-    WATER_PUMP,
+    WATER,
     COOLER,
     HEATER,
     HUMIDIFIER

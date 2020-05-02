@@ -9,7 +9,7 @@ from node_type import (
     HEATER,
     HUMIDIFIER,
     SPRINKLER,
-    WATER_PUMP
+    WATER
 )
 from validate_dict import (
     ValidateEnclosurePOST,
@@ -17,7 +17,7 @@ from validate_dict import (
     ValidateHeaterPOST,
     ValidateHumidifierPOST,
     ValidateSprinklerPOST,
-    ValidateWaterPumpPOST,
+    ValidateWaterPOST,
 )
 
 
@@ -72,8 +72,8 @@ class PlantKeeper:
             self.validator = ValidateHumidifierPOST()
         elif self.node_type == SPRINKLER:
             self.validator = ValidateSprinklerPOST()
-        elif self.node_type == WATER_PUMP:
-            self.validator = ValidateWaterPumpPOST()
+        elif self.node_type == WATER:
+            self.validator = ValidateWaterPOST()
 
     def set_node_type(self, node_type):
         assert isinstance(node_type, str)

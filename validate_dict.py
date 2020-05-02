@@ -50,7 +50,7 @@ class ValidateHeaterPOST(BaseValidatePOST):
     ]
 
 
-class ValidateWaterPumpPOST(BaseValidatePOST):
+class ValidateWaterPOST(BaseValidatePOST):
     required_keys = [
         'level'
     ]
