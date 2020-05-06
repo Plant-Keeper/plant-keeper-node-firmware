@@ -4,7 +4,8 @@ Plant keeper Water ESP32 firmware
 Use:
     - Pin 34 for HCSR04 trigger, 35 for echo
     - Pin 26 for Pump activation
-    - TFT Screen ST7735 Pins: 12,13,14,16, 17, 18
+    - TFT Screen ST7735 Pins: 4, 2, 23, 18, 15
+        tested with supplier = Az Delevery
 
 Author : Shanmugathas Vigneswaran
 mail : shangmuathas.vigneswaran@outlook.fr
@@ -41,12 +42,12 @@ RELAY = Pin(26, Pin.OUT)
 SPI = SPI(
     2, baudrate=20000000,
     polarity=0, phase=0,
-    sck=Pin(14), mosi=Pin(13), miso=Pin(12)
+    sck=Pin(18), mosi=Pin(23), miso=Pin(12)
 )
 POWER_COLOR = TFT.GREEN
 
 # Print Node information / Static section
-tft = TFT(SPI, 16, 17, 18)
+tft = TFT(SPI, 2, 4, 15)
 tft.initb2()
 tft.rgb(True)
 tft.fill(TFT.BLACK)
