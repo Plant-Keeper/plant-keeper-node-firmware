@@ -29,7 +29,7 @@ NODE_TYPE = node_type.WATER
 PK_API_GATEWAY_HOST = '10.3.141.1'
 PK_API_GATEWAY_PORT = 8001
 # Soil humidity sensors setting
-water_level_sensor = HCSR04(trigger_pin=34, echo_pin=35, echo_timeout_us=10000)
+water_level_sensor = HCSR04(trigger_pin=17, echo_pin=35, echo_timeout_us=10000)
 WATER_LEVEL_FIT = fit(
     # Map analog read min/max
     [5, 1000],
