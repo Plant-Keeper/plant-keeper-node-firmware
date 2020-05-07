@@ -2,7 +2,7 @@
 
 Plant keeper Water ESP32 firmware
 Use:
-    - Pin 34 for HCSR04 trigger, 35 for echo
+    - Pin 34 for HCSR04 trigger, 35 for echo, use +5V not +3.3V
     - Pin 26 for Pump activation
     - TFT Screen ST7735 Pins: 4, 2, 23, 18, 15
         tested with supplier = Az Delevery
@@ -29,12 +29,12 @@ NODE_TYPE = node_type.WATER
 PK_API_GATEWAY_HOST = '10.3.141.1'
 PK_API_GATEWAY_PORT = 8001
 # Soil humidity sensors setting
-water_level_sensor = HCSR04(trigger_pin=17, echo_pin=35, echo_timeout_us=10000)
+water_level_sensor = HCSR04(trigger_pin=21, echo_pin=22, echo_timeout_us=10000)
 WATER_LEVEL_FIT = fit(
     # Map analog read min/max
-    [5, 1000],
+    [125, 0],
     # to 0% to 100%
-    [100, 0]
+    [0, 100]
 )
 # Relay for valve power on / power off
 RELAY = Pin(26, Pin.OUT)
