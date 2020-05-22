@@ -2,6 +2,8 @@
 Generate model to scale analog data to user defined range
 Source: http://code.activestate.com/recipes/578914-simple-linear-regression-with-pure-python/
 
+Author : Chaobin Tang  http://code.activestate.com/recipes/users/4174076/
+License : MIT
 
 """
 
