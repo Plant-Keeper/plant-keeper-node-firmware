@@ -30,12 +30,50 @@ PK_API_GATEWAY_HOST = '10.3.141.1'
 PK_API_GATEWAY_PORT = 8001
 # Soil humidity sensors setting
 water_level_sensor = HCSR04(trigger_pin=21, echo_pin=22, echo_timeout_us=10000)
-WATER_LEVEL_FIT = fit(
+water_level_fitter = fit(
     # Map analog read min/max
     [118, 34],
     # to 0% to 100%
     [0, 100]
 )
+
+# https://en.wikipedia.org/wiki/PH
+ph_sensor = ADC(Pin(33))
+ph_sensor.atten(ADC.ATTN_11DB)
+ph_fitter = fit(
+    # Map analog read min/max
+    # don't change this values for ADC
+    [0, 4095],
+    # acidity level
+    [0, 14]
+)
+
+# https://en.wikipedia.org/wiki/Conductivity_(electrolytic)
+ec_sensor = ADC(Pin(34))
+ec_sensor.atten(ADC.ATTN_11DB)
+ec_fitter = fit(
+    # Map analog read min/max
+    # don't change this values for ADC
+    [0, 4095],
+    # depends on used sensor
+    # target default range [5 ; 50]
+    # units mS/m
+    [5, 50]
+)
+
+# https://en.wikipedia.org/wiki/Reduction_potential
+orp_sensor = ADC(Pin(35))
+orp_sensor.atten(ADC.ATTN_11DB)
+orp_fitter = fit(
+    # Map analog read min/max
+    # don't change this values for ADC
+    [0, 4095],
+    # depend on used sensor
+    # target default range [-400 ; 400]
+    # units milliVolt
+    [-400, 400]
+)
+
 # Relay for valve power on / power off
 PUMP_RELAY = Pin(26, Pin.OUT)
 
@@ -71,7 +109,16 @@ if __name__ == '__main__':
     while True:
         try:
             raw_distance = water_level_sensor.distance_mm()
-            percent = int(WATER_LEVEL_FIT(raw_distance))
+            percent = int(water_level_fitter(raw_distance))
+
+            ph_raw = ph_sensor.read()
+            ph = ph_fitter(ph_raw)
+
+            ec_raw = ec_sensor.read()
+            ec = ec_fitter(ec_raw)
+
+            orp_raw = orp_sensor.read()
+            orp = orp_fitter(orp_raw)
 
             # Post to Api Gateway sensor value
             pk.post({"level": percent})
@@ -86,9 +133,19 @@ if __name__ == '__main__':
             # Flush dynamic part of screen
             tft.fillrect((0, 50), (128, 160), POWER_COLOR)
             # Print relevant values for user
-            tft.text((2, 50), "Raw distance: " + str(raw_distance), TFT.BLACK, sysfont, 1.1, nowrap=False)
-            tft.text((2, 60), "% fill: " + str(percent), TFT.BLACK, sysfont, 1.1, nowrap=False)
-            tft.text((2, 70), "Power: " + str(pk.power), TFT.BLACK, sysfont, 1.1, nowrap=False)
+            tft.text((2, 50), "Raw dist. (mm) : " + str(raw_distance), TFT.BLACK, sysfont, 1.1, nowrap=False)
+            tft.text((2, 60), "Water filled %: " + str(percent), TFT.BLACK, sysfont, 1.1, nowrap=False)
+
+            tft.text((2, 70), "pH raw: " + str(ph_raw), TFT.BLACK, sysfont, 1.1, nowrap=False)
+            tft.text((2, 80), "pH : " + str(ph), TFT.BLACK, sysfont, 1.1, nowrap=False)
+
+            tft.text((2, 90), "EC raw: " + str(ec_raw), TFT.BLACK, sysfont, 1.1, nowrap=False)
+            tft.text((2, 100), "EC (mS/m) :  " + str(ec), TFT.BLACK, sysfont, 1.1, nowrap=False)
+
+            tft.text((2, 110), "ORP raw: " + str(orp_raw), TFT.BLACK, sysfont, 1.1, nowrap=False)
+            tft.text((2, 120), "ORP (mV): " + str(orp), TFT.BLACK, sysfont, 1.1, nowrap=False)
+
+            tft.text((2, 130), "Power: " + str(pk.power), TFT.BLACK, sysfont, 1.1, nowrap=False)
             # +----------------------------------------------------+
             # | Activate / Deactivate relay                        |
             # +----------------------------------------------------+
