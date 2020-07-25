@@ -75,7 +75,7 @@ orp_fitter = fit(
 )
 
 # Relay for valve power on / power off
-PUMP_RELAY = Pin(26, Pin.OUT)
+PUMP_RELAY = Pin(19, Pin.OUT)
 
 SPI = SPI(
     2, baudrate=20000000,
