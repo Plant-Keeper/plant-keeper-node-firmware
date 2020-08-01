@@ -11,19 +11,38 @@ NODE_TAG = 'orchid'
 _SENSOR_TOPIC = NODE_TYPE + "/" + NODE_TAG + "/" + "sensor"
 _CONTROLLER_TOPIC = NODE_TYPE + "/" + NODE_TAG + "/" + "controller"
 
-pub_client = MQTTClient("umqtt_client", SERVER, PORT)
-pub_client.connect()
-
-sub_client = MQTTClient("umqtt_client", SERVER, PORT)
-sub_client.connect()
-
 
 def read_sensors():
     return ujson.dumps({"humidity_level": random.randint(0, 100)})
+
+
+def controller_callback(topic, msg):
+    """
+    Handle new message coming from the controller
+    :param topic:
+    :param msg:
+    :return:
+    """
+    print((topic, msg))
+
+
+def subscribe_controller():
+    while True:
+        sub_client.wait_msg()
 
 
 def publish_sensors():
     while True:
         pub_client.publish(_SENSOR_TOPIC, read_sensors())
 
+
+sub_client = MQTTClient(NODE_TYPE + "_" + NODE_TAG + "_" + "SUB", SERVER, PORT)
+sub_client.set_callback(controller_callback)
+sub_client.connect()
+sub_client.subscribe(_CONTROLLER_TOPIC)
+
+pub_client = MQTTClient(NODE_TYPE + "_" + NODE_TAG + "_" + "PUB", SERVER, PORT)
+pub_client.connect()
+
 _thread.start_new_thread(publish_sensors, ())
+_thread.start_new_thread(subscribe_controller, ())
