@@ -3,8 +3,8 @@ from umqtt.robust import MQTTClient
 import random
 import ujson
 
-SERVER = "af120153-db6a-4fdd-a81b-6d902b00e936.nodes.k8s.fr-par.scw.cloud"
-PORT = 32500
+MQTT_SERVER = "af120153-db6a-4fdd-a81b-6d902b00e936.nodes.k8s.fr-par.scw.cloud"
+MQTT_PORT = 32500
 NODE_TYPE = "sprinkler"
 NODE_TAG = 'orchid'
 
@@ -18,9 +18,19 @@ registered = False
 
 
 def register():
-    c = MQTTClient(NODE_TYPE + "_" + NODE_TAG + "_" + "REGISTRY ", SERVER, PORT)
+    c = MQTTClient(
+        NODE_TYPE
+        + "_"
+        + NODE_TAG
+        + "_REG",
+        MQTT_SERVER,
+        MQTT_PORT
+    )
     c.connect()
-    c.publish(_REGISTRY_SIGN_TOPIC, ujson.dumps({"tag": NODE_TAG}))
+    c.publish(
+        _REGISTRY_SIGN_TOPIC,
+        ujson.dumps({"tag": NODE_TAG})
+    )
 
 
 def wait_registry_response():
@@ -31,7 +41,14 @@ def wait_registry_response():
         registered = ujson.loads(msg)['acknowledge']
         raise ValueError('force close subscription')
 
-    c = MQTTClient(NODE_TYPE + "_" + NODE_TAG + "_" + "SUB", SERVER, PORT)
+    c = MQTTClient(
+        NODE_TYPE
+        + "_"
+        + NODE_TAG
+        + "_REG_VALIDATE",
+        MQTT_SERVER,
+        MQTT_PORT
+    )
     c.set_callback(callback)
     c.connect()
     c.subscribe(_REGISTRY_VALIDATION_TOPIC)
@@ -46,7 +63,14 @@ def subscribe_controller():
     def callback(topic, msg):
         print((topic, msg))
 
-    c = MQTTClient(NODE_TYPE + "_" + NODE_TAG + "_" + "SUB", SERVER, PORT)
+    c = MQTTClient(
+        NODE_TYPE
+        + "_"
+        + NODE_TAG
+        + "_SUB",
+        MQTT_SERVER,
+        MQTT_PORT
+    )
     c.set_callback(callback)
     c.connect()
     c.subscribe(_CONTROLLER_TOPIC)
@@ -62,7 +86,14 @@ def publish_sensors():
             }
         )
 
-    c = MQTTClient(NODE_TYPE + "_" + NODE_TAG + "_" + "PUB", SERVER, PORT)
+    c = MQTTClient(
+        NODE_TYPE
+        + "_"
+        + NODE_TAG
+        + "_PUB",
+        MQTT_SERVER,
+        MQTT_PORT
+    )
     c.connect()
     while True:
         c.publish(_SENSOR_TOPIC, read_sensors())
