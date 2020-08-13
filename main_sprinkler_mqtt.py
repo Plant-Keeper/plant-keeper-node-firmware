@@ -1,11 +1,15 @@
 import ujson
 import random
 import _thread
-from boot import SSID
 from ST7735 import TFT
 from sysfont import sysfont
 from umqtt.robust import MQTTClient
-from settings import tft
+from settings import (
+    tft,
+    MQTT_SERVER,
+    MQTT_PORT,
+    WIFI_SSID
+)
 
 NODE_TYPE = "sprinkler"
 NODE_TAG = 'orchid'
@@ -106,9 +110,9 @@ def publish_sensors():
 
 def init_display(_tft):
     global registered
-    wifi_ssid = SSID
+    wifi_ssid = WIFI_SSID
     if len(wifi_ssid) >= 14:
-        wifi_ssid = SSID[0:14]
+        wifi_ssid = WIFI_SSID[0:14]
 
     _tft.fill(TFT.BLACK)
     _tft.fillrect((0, 0), (128, 50), TFT.WHITE)
