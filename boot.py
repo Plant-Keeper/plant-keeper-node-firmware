@@ -5,6 +5,7 @@
 import network
 from settings import WIFI_SSID, WIFI_PASSWORD
 
+
 def connect_access_point():
     sta_if = network.WLAN(network.STA_IF)
     if not sta_if.isconnected():
