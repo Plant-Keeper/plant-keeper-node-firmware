@@ -5,44 +5,25 @@ Flash ESP
 
 .. code-block:: shell
 
-    esptool.py --port COM3 erase_flash
-    esptool.py --chip esp32 --port COM3 write_flash -z 0x1000 esp32_gen.bin
+    pipenv install
+    pipenv shell
+    # for windows machine
+    make flash-mp -e PORT=COM3
+    # for Linux/macOS it will be something like that
+    # example for Silicon Lab UART<>USB chip
+    make flash-mp -e PORT=/dev/tty.SLAB_USBtoUART
 
+Use Makefile to change Micropython firmware link to latest
 
-Plant Keeper Client for ESP32
-=============================
+Write Sprinkler firmware
+========================
 
-
-Quick start
-===========
-
-Usage for sprinkler
+- Change settings.py: WIFI_SSID, WIFI_PASSWORD, MQTT_SERVER (and MQTT_PORT if needed)
+- Change in main_sprinklers_mqtt.py **NODE_TAG** with a unique name describing the sprinkler
+- Run this command to minify and write python file to ESP32
 
 .. code-block:: shell
 
-    from machine import Pin, ADC
-    from pk_node_core.pk import Client
-    from pk_node_core import node_type
-
-    SOIL_SENSOR_TAG = 'plant-1'
-
-    soil_humidity_sensor = ADC(Pin(34))
-    soil_humidity_sensor.atten(ADC.ATTN_11DB) # full range voltage: 3.3V
-
-    client = Client(host='192.168.0.21', port=8001)
-    client.set_node_type(node_type.SPRINKLER)
-
-    sensor_humidity = soil_humidity_sensor.read()
-
-    while True:
-        client.post(
-            dict(
-                tag=SOIL_SENSOR_TAG,
-                soil_humidity=sensor_humidity
-                )
-        )
-
-        if client.power == True:
-            activate_valve = True
-        else:
-            activate_valve = False
+    put-sprinkler-firmware -e PORT=COM3
+    # or for Linux/macOS
+    put-sprinkler-firmware -e PORT=/dev/tty.SLAB_USBtoUART
