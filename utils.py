@@ -10,6 +10,12 @@ License : MIT
 import math
 from ST7735 import TFT
 from sysfont import sysfont
+import urequests as requests
+from settings import (
+    API_GATEWAY_URL,
+    API_GATEWAY_PORT,
+    API_GATEWAY_BASIC_AUTH
+)
 
 
 def mean(xs):
@@ -54,8 +60,48 @@ def fit(x, y):
 
     return model
 
+# soil_moisture_sensor = ADC(Pin(34))
+# soil_moisture_sensor.atten(ADC.ATTN_11DB)
+# soil_moisture_model = fit(
+#     # Map analog read min/max
+#     [2300, 1360],
+#     # to 0% to 100%
+#     [0, 100]
+# )
+# # Relay for valve power on / power off
+# sprinkler_valve = Pin(26, Pin.OUT)
+
 
 def boot_display(_tft):
     _tft.fillrect((0, 0), (128, 50), TFT.WHITE)
     _tft.fillrect((0, 50), (128, 160), TFT.GREEN)
     _tft.text((2, 2), "BOOTING", TFT.BLACK, sysfont, 1.1, nowrap=False)
+
+
+def register_sprinkler(tag):
+    api = (
+            API_GATEWAY_URL
+            + ":"
+            + API_GATEWAY_PORT
+            + "/sprinkler/registry"
+    )
+    header = {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+
+    if API_GATEWAY_BASIC_AUTH[0] and API_GATEWAY_BASIC_AUTH[1]:
+        r = requests.post(
+            api,
+            json={"tag": tag},
+            headers=header,
+            auth=API_GATEWAY_BASIC_AUTH
+        )
+    else:
+        r = requests.post(
+            api,
+            json={"tag": tag},
+            headers=header
+        )
+    if r.status_code in [200, 201]:
+        return r.json()['acknowledge']
