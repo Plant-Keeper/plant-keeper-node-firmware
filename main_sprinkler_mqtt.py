@@ -10,6 +10,7 @@ from settings import (
     MQTT_PORT,
     WIFI_SSID
 )
+from utils import register_sprinkler
 
 NODE_TYPE = "sprinkler"
 NODE_TAG = 'orchid'
@@ -17,53 +18,8 @@ NODE_TAG = 'orchid'
 _SENSOR_TOPIC = NODE_TYPE + "/sensor"
 _CONTROLLER_TOPIC = NODE_TYPE + "/controller"
 
-_REGISTRY_SIGN_TOPIC = 'sprinkler/config/registry'
-_REGISTRY_VALIDATION_TOPIC = "sprinkler/config/registry/validation/" + NODE_TAG
-
 registered = False
 flow_dict = {"last_power": False}
-
-
-def register():
-    c = MQTTClient(
-        NODE_TYPE
-        + "_"
-        + NODE_TAG
-        + "_REG",
-        MQTT_SERVER,
-        MQTT_PORT
-    )
-    c.connect()
-    c.publish(
-        _REGISTRY_SIGN_TOPIC,
-        ujson.dumps({"tag": NODE_TAG})
-    )
-
-
-def wait_registry_response():
-    global registered
-
-    def callback(topic, msg):
-        global registered
-        registered = ujson.loads(msg)['acknowledge']
-        raise ValueError('force close subscription')
-
-    c = MQTTClient(
-        NODE_TYPE
-        + "_"
-        + NODE_TAG
-        + "_REG_VALIDATE",
-        MQTT_SERVER,
-        MQTT_PORT
-    )
-    c.set_callback(callback)
-    c.connect()
-    c.subscribe(_REGISTRY_VALIDATION_TOPIC)
-    try:
-        while True:
-            c.wait_msg()
-    finally:
-        c.disconnect()
 
 
 def subscribe_controller():
@@ -143,11 +99,7 @@ def update_display(_tft):
 # =================================
 # Register tag to Master
 # =================================
-register()
-try:
-    wait_registry_response()
-except ValueError:
-    pass
+registered = register_sprinkler(NODE_TAG)
 init_display(tft)
 
 # =================================
