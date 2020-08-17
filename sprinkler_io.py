@@ -1,3 +1,9 @@
+"""
+Node Type Sprinkler I/O function and configuration
+Author: Shanmugathas Vigneswaran
+Email: shanmugathas.vigneswaran@outlooK.fr
+"""
+
 from machine import Pin, ADC
 from utils import fit
 
