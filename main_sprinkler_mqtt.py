@@ -12,6 +12,7 @@ from settings import (
     WIFI_SSID
 )
 from utils import register_sprinkler
+from sprinkler_io import read_sensors
 
 gc.enable()
 
@@ -61,12 +62,6 @@ def subscribe_controller():
 def publish_sensors():
     global flow_dict
 
-    def read_sensors():
-        return {
-            "tag": NODE_TAG,
-            "soil_moisture": random.randint(0, 100)
-        }
-
     c = MQTTClient(
         NODE_TYPE
         + "_"
@@ -77,7 +72,7 @@ def publish_sensors():
     )
     c.connect()
     while True:
-        s = read_sensors()
+        s = read_sensors(NODE_TAG)
         flow_dict['sensors'] = s
         c.publish(_SENSOR_TOPIC, ujson.dumps(s))
 
@@ -109,8 +104,10 @@ def update_display():
             _TFT.fillrect((110, 50), (20, 10), TFT.RED)
             _TFT.text((2, 50), "Water valve off", TFT.BLACK, sysfont, 1.1, nowrap=False)
 
-        _TFT.text((2, 60), "Raw ADC: " + str(flow_dict['sensors']['soil_moisture']), TFT.BLACK, sysfont, 1.1, nowrap=False)
-        _TFT.text((2, 70), "Soil moisture: ", TFT.BLACK, sysfont, 1.1, nowrap=False)
+        _TFT.text((2, 60), "Raw ADC: " + str(flow_dict['sensors']['soil_moisture_raw_adc']),
+                  TFT.BLACK, sysfont, 1.1, nowrap=False)
+        _TFT.text((2, 70), "Soil Moisture: " + str(flow_dict['sensors']['soil_moisture']),
+                  TFT.BLACK, sysfont, 1.1, nowrap=False)
         gc.collect()
 
 
