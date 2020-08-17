@@ -18,7 +18,8 @@ from settings import (
     tft,
     MQTT_SERVER,
     MQTT_PORT,
-    WIFI_SSID
+    WIFI_SSID,
+    __sprinkler_firmware_version__
 )
 from utils import register_sprinkler
 from sprinkler_io import read_sensors, water_valve_relay
@@ -130,6 +131,9 @@ def update_display():
                   TFT.BLACK, sysfont, 1.1, nowrap=False)
         if flow_dict['soft_fuse']:
             _TFT.text((2, 80), "Soft fuse !", TFT.RED, sysfont, 1.1, nowrap=False)
+
+        _TFT.text((2, 150), __sprinkler_firmware_version__,
+                  TFT.BLACK, sysfont, 1.1, nowrap=False)
         gc.collect()
 
 
