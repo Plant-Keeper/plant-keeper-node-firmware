@@ -1,6 +1,7 @@
 """
 Source : https://github.com/SebastianCzoch/influx-line-protocol
 Author : Sebastian Czoch / https://github.com/SebastianCzoch
+InfluxDB line protocol ref : https://docs.influxdata.com/influxdb/v1.8/write_protocols/line_protocol_reference/
 
 MIT License
 
@@ -31,7 +32,7 @@ class Metric:
     def __init__(self, measurement):
         self.measurement = measurement
         self.values = {}
-        self.tags = dict()
+        self.tags = {}
 
     def add_tag(self, name, value):
         self.tags[str(name)] = str(value)
