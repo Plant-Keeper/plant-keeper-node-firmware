@@ -6,6 +6,7 @@ Email: shanmugathas.vigneswaran@outlooK.fr
 
 from machine import Pin, ADC
 from utils import fit
+from influxdb_line_protocol import Metric
 
 # ======================== Input  =========================
 # =========================================================
@@ -33,11 +34,12 @@ def read_sensors(tag):
         soil_moisture = 0
     elif soil_moisture > 100:
         soil_moisture = 100
-    return {
-        "tag": tag,
-        "soil_moisture_raw_adc": soil_moisture_raw_adc,
-        "soil_moisture": soil_moisture
-    }
+
+    metric = Metric("sprinkler")
+    metric.add_tag('tag', tag)
+    metric.add_value('soil_moisture_raw_adc', soil_moisture_raw_adc)
+    metric.add_value('soil_moisture', soil_moisture)
+    return str(metric)
 
 
 # ======================== Output  ========================
