@@ -71,13 +71,13 @@ def read_sensors():
     # limit between 0 and 100
     water_level = _limit(water_level, 0, 100)
     ph_raw_adc = ph_sensor.read()
-    ph = ph_fitter(ph_raw_adc)
+    ph = int(ph_fitter(ph_raw_adc))
 
     ec_raw_adc = ec_sensor.read()
-    ec = ec_fitter(ec_raw_adc)
+    ec = int(ec_fitter(ec_raw_adc))
 
     orp_raw_adc = orp_sensor.read()
-    orp = orp_fitter(orp_raw_adc)
+    orp = int(orp_fitter(orp_raw_adc))
 
     metric = Metric("water")
     metric.add_value('water_distance_mm', water_distance_mm)
