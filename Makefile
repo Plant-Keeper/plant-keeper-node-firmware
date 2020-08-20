@@ -40,8 +40,8 @@ put-sprinkler-firmware: sprinkler-firmware min-sprinkler
 	ampy --port ${PORT} put sprinkler-firmware/main.py
 
 
-.PHONY: dev
-dev:
+.PHONY: dev-sprinkler
+dev-sprinkler:
 	# minify
 	pipenv run pyminify boot.py > sprinkler-firmware/boot.py
 	pipenv run pyminify main_sprinkler.py > sprinkler-firmware/main.py
