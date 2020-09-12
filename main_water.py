@@ -137,7 +137,7 @@ def update_display():
         _TFT.text((2, 80), "Water Level:" + str(flow_dict['sensors']['water_level']) + "%",
                   TFT.BLACK, sysfont, 1.1, nowrap=False)
         _TFT.text((2, 90), "pH:" + str(flow_dict['sensors']['ph']), TFT.BLACK, sysfont, 1.1, nowrap=False)
-        _TFT.text((2, 100), "EC:" + str(flow_dict['sensors']['ec']) + "mS/m", TFT.BLACK, sysfont, 1.1, nowrap=False)
+        _TFT.text((2, 100), "EC:" + str(flow_dict['sensors']['ec']) + "ppm", TFT.BLACK, sysfont, 1.1, nowrap=False)
         _TFT.text((2, 110), "ORP:" + str(flow_dict['sensors']['orp']) + "mV", TFT.BLACK, sysfont, 1.1, nowrap=False)
         if flow_dict['soft_fuse']:
             _TFT.text((2, 120), "Soft fuse !", TFT.RED, sysfont, 1.1, nowrap=False)
